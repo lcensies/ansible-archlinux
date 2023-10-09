@@ -3,7 +3,7 @@
 # ==================
 ##
 user:
-    name: aaron
+    name: esc2
     group: users
     shell: /bin/zsh
 
@@ -20,8 +20,8 @@ user:
 #                    if you wan't proprietary drivers follow the steps documented in the arch wiki.
 ##
 system:
-    locale: de_CH.UTF-8
-    timezone: Europe/Zurich
+    locale: ru_RU.UTF-8
+    timezone: Europe/Moscow
     processor: amd
     graphics_card: nvidia
     macspoof: disabled
