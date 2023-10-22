@@ -1,10 +1,16 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
+# https://github.com/mrlesmithjr/vagrant-box-templates/blob/master/Vagrantfile
+
 Vagrant.configure("2") do |config|
 
   # Pull official archlinux box
   config.vm.box = "archlinux/archlinux"
+  # Guest hostname
+  config.vm.hostname = "arch1"
+  # Vagrant hostname
+  config.vm.define "arch1"
 
   # Enable synced folders to sync the playbook to the virtual machine using rsync
   config.vm.synced_folder "../ansible", "/vagrant", type: "rsync", rsync__auto: "true"
@@ -16,6 +22,8 @@ Vagrant.configure("2") do |config|
     ansible.inventory_path = "/vagrant/inventory/all.yml"
     ansible.galaxy_role_file = "/vagrant/requirements.yml"
     ansible.playbook = "/vagrant/playbook.yml"
+    # TODO: remove
+    ansible.tags = "dev"
   end
 
   # Customize the vm configs
@@ -28,7 +36,29 @@ Vagrant.configure("2") do |config|
                   "--medium", "emptydrive"]
     # increase virtual video ram
     vb.customize ["modifyvm", :id, "--vram", "128"]
+    vb.customize ["modifyvm", :id, "--accelerate3d", "on"]
+
+    # https://superuser.com/questions/1403123/what-are-differences-between-vboxvga-vmsvga-and-vboxsvga-in-virtualbox
+
+    # TODO: fix the issue with remote display + 3D accel + remote display.
+    # For now it seems like remote display (at least the one provided out)
+    # of the box + vboxsvga will not work.
+    # Maybe setup SPICE server / switch to qemu+kvm
+    # Current config doesn't produces warnings in Vbox. Fix needed
+    vb.customize ["modifyvm", :id, "--graphicscontroller", "vboxsvga"]
+
+    vb.customize ["modifyvm", :id,
+                  "--audio", "alsa",
+                  "--audiocontroller", "ac97"]
+
+    # Forward audio from host to guest
+    vb.customize ["modifyvm", :id, "--audioin", "on"]
+    # Forward audio from guest to host
+    vb.customize ["modifyvm", :id, "--audioout", "on"]
+
     vb.cpus = "2"
     vb.memory = "6192"
+    # VBox GUI hostname
+    vb.name = "arch1"
   end
 end
