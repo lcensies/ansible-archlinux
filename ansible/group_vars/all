@@ -23,15 +23,23 @@ system:
     locale: ru_RU.UTF-8
     timezone: Europe/Moscow
     processor: amd
-    graphics_card: nvidia
+    # Macspoof with Virtualbox seem to break the network connectivity
+    # after hybernation. Only full system reboot helps. 
     macspoof: disabled
+    graphics_card: nvidia
+    # For some reason NTP tasks do break sshd inside Arch VM.
+    # It just stops responding.
+    # Might be related to https://serverfault.com/questions/819010/sshd-ntpd-slow-to-respond
+    # Note that the issue also might be related to the host network interfaces. For some reason
+    # the sshd didn't work once when I disabled Wi-Fi interface on host
+    use_ntp: false
 
 ##
 # Bootloader configuration
 # ========================
 # syslinux and grub are supported
 ##
-bootloader: syslinux
+bootloader: grub
 
 ##
 # Connectivity configuration
@@ -59,20 +67,61 @@ dotfiles:
 ##
 base_packages:
     - base-devel
-    - cronie
-    - openssh
+    # Cron implementation with enhanced logging,
+    # timezone support, anacron compatibility, 
+    # PAM & SELinux support
+    # - cronie
+    # Potentially causes problems with vagrant SSH connection
+    # - openssh
     - rkhunter
     - zsh
     - htop
     - nmap
     - curl
     - tmux
-    - git
     - rsync
     - coreutils
     - dateutils
+    # Cli calculator
     - bc
     - strace
     - lsof
     - sysstat
+    - git
+    # Git TUI for viewing commits
     - tig
+    - xdotool
+    # Tool to work with clipboard from cmdline
+    - xclip
+    - unzip
+
+
+##
+# Terminal configuration
+# ==========================
+##
+terminal:
+    install_kitty: true
+    install_urxvt: true
+    install_alacritty: true
+
+
+##
+# Messengers configuration
+# ==========================
+##
+messengers:
+    install_telegram: true
+    install_slack: true
+
+##
+# Virtualbox guest configuration
+# ==========================
+##
+virtualbox_guest:
+    # Whether to install guest utils with X server support
+    x_support: true
+
+
+dev:
+    install_vcpkg: true

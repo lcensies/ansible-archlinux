@@ -1,4 +1,4 @@
 all:
   hosts:
-    localhost:
+    arch_workstation:
       ansible_connection: local
