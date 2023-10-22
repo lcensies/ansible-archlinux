@@ -1,7 +1,7 @@
 ---
 
-- name: Install calibre
+- name: Install calibre e-book manager
   pacman: name=calibre state=present
 
-- name: Install evince
+- name: Install evince document viewer
   pacman: name=evince state=present

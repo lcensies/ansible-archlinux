@@ -1,0 +1,10 @@
+
+- include_tasks: 0-checkout.yml
+- include_tasks: 1-vboxguest.yml
+
+# Note: untested, fix might be needed
+- name: Install linux headers
+  include_tasks: 2-linux-headers.yml
+  when: "'linux-headers' not in ansible_facts.packages"
+
+

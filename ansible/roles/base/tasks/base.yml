@@ -18,16 +18,16 @@
   retries: 10
   delay: 2
 
-- name: Perform full system upgrade
-  pacman:
-    update_cache: true
-    upgrade: true
-  register: task_result
-  until: task_result is success
-  retries: 10
-  delay: 2
-  notify:
-    - rkhunter propupdate
+# - name: Perform full system upgrade
+#   pacman:
+#     update_cache: true
+#     upgrade: true
+#   register: task_result
+#   until: task_result is success
+#   retries: 10
+#   delay: 2
+#   notify:
+#     - rkhunter propupdate
 
 - name: Install base packages
   pacman:
@@ -37,17 +37,35 @@
   until: task_result is success
   retries: 10
   delay: 2
-  notify:
-    - rkhunter propupdate
+  # notify:
+  #   - rkhunter propupdate
 
+
+
+- name: Create the `aur_builder` user
+  become: true
+  user:
+    name: aur_builder
+    create_home: yes
+    group: wheel
+
+- name: Allow the `aur_builder` user to run `sudo pacman` without a password
+  become: true
+  lineinfile:
+    path: /etc/sudoers.d/11-install-aur_builder
+    line: 'aur_builder ALL=(ALL) NOPASSWD: /usr/bin/pacman'
+    create: yes
+    mode: 0644
+    validate: 'visudo -cf %s'
+
+# Verified: 20.10.2023
 - name: Install yay as aur helper
-  aur:
+  kewlfft.aur.aur:
     name: yay
-    user: "{{ user.name }}"
-    skip_pgp: true
   register: task_result
+  become_user: aur_builder
   until: task_result is success
-  retries: 10
+  retries: 2
   delay: 2
 
 - name: Install microcode updates for intel (if necessary)
@@ -56,9 +74,10 @@
     state: present
   register: task_result
   until: task_result is success
-  retries: 10
+  retries: 2
   delay: 2
   notify:
+  # TODO change to update bootloader handler
     - update grub
     - update syslinux
   when: system.processor == "intel"
@@ -69,12 +88,15 @@
     state: present
   register: task_result
   until: task_result is success
-  retries: 10
+  retries: 2
   delay: 2
   notify:
     - update grub
     - update syslinux
   when: system.processor == "amd"
 
-- name: Enable cronie server
-  ansible.builtin.service: name=cronie state=started enabled=true
+
+
+# On demand: Uncomment cronie in the ansible/group_vars/all
+# - name: Enable cronie server
+#   service: name=cronie state=started enabled=true

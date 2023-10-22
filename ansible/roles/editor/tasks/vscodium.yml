@@ -1,0 +1,23 @@
+# Verified: 20.10.2023
+- name: install vscodium
+  kewlfft.aur.aur:
+    name: vscodium-bin
+  become_user: aur_builder
+
+- name: install vscodium extensions
+  command: "vscodium --install-extension {{ item }}"
+  become_user: "{{ user.name }}"
+  register: ext_install
+  changed_when: ext_install.rc != 0
+  with_items:
+    - gulajavaministudio.mayukaithemevsc
+    - k--kato.intellij-idea-keybindings
+    - ms-python.python
+    - ms-toolsai.jupyter
+    - ms-toolsai.jupyter-keymap
+    - ms-toolsai.jupyter-renderers
+    - rebornix.ruby
+    - redhat.vscode-yaml
+    - waderyan.gitblame
+    - wingrunr21.vscode-ruby
+    - dendron.dendron-paste-image

@@ -1,0 +1,27 @@
+---
+
+# TODO: refactor line length
+- name: Install Virtualbox Guest utils with X support
+  shell: | 
+    pacman -Q {{ guest_utils_package }} 2>/dev/null || $(yes Y | pacman -Sy {{ guest_utils_package }})
+  vars:
+    guest_utils_package: "{{ 'virtualbox-guest-utils' if virtualbox_guest.x_support | bool else 'virtualbox-guest-utils-nox' }}"
+
+
+- name: Activate Virtualbox guest service
+  service:
+    name: vboxservice.service
+    state: started
+    enabled: true
+
+
+# Obsolete. Seems to be managed by the vboxservice
+# - name: Insert Virtualbox kernel modules
+#   community.general.modprobe:
+#     name: "{{ item }}"
+#     state: present
+#   loop:
+#     - vboxguest
+#     - vboxsf
+#     - vboxvideoasdfdf
+

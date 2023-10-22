@@ -1,0 +1,5 @@
+---
+
+- name: Gather facts about installed packages
+  package_facts:
+    manager: auto

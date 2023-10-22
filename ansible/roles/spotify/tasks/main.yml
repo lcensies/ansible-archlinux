@@ -1,7 +1,7 @@
 ---
 
+# Verified: 20.10.2023
 - name: Install spotify from aur
-  aur:
+  kewlfft.aur.aur:
     name: spotify
-    user: "{{ user.name }}"
-    skip_pgp: true
+  become_user: aur_builder

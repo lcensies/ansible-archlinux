@@ -1,4 +1,4 @@
 ---
 
-- ansible.builtin.import_tasks: editor.yml
-  name: editor
+- include_tasks: vim.yml
+- include_tasks: vscodium.yml

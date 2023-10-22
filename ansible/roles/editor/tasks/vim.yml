@@ -1,0 +1,23 @@
+- name: install vim
+  pacman:
+    name: vim
+    state: present
+
+- name: Ensure vim autoload dir exists
+  file: 
+    path: "/home/{{ user.name }}/.vim/autoload"
+    state: directory
+
+- name: Install VimPlug plugin manager
+  copy:
+    src: plug.vim
+    dest: "/home/{{ user.name }}/.vim/autoload/plug.vim"
+
+- name: Install vim plugins
+  command: "vim +'PlugInstall --sync' +qa"
+
+# Verified: 20.10.2023
+- name: install gruvbox theme
+  kewlfft.aur.aur:
+    name: vim-gruvbox-git
+  become_user: aur_builder

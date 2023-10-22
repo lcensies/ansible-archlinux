@@ -3,27 +3,29 @@
 - name: install fonts
   pacman:
     name:
+      - fontconfig
       - ttf-dejavu
       - ttf-liberation
       - ttf-droid
       - noto-fonts-emoji
-      - fontconfig
       - xorg-font-util
       - ttf-font-awesome
+      - ttf-jetbrains-mono
     state: present
   register: task_result
   until: task_result is success
   retries: 10
   delay: 2
 
+# Verified: 20.10.2023
 - name: install aur fonts
-  aur:
+  kewlfft.aur.aur:
     name: "{{ item }}"
-    user: "{{ user.name }}"
   with_items:
     - powerline-fonts-git
     - oh-my-zsh-git
     - ttf-meslo-nerd-font-powerlevel10k
+  become_user: aur_builder
   register: task_result
   until: task_result is success
   retries: 10

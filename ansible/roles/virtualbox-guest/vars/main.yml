@@ -1,0 +1,5 @@
+linux_headers_url: "https://archive.archlinux.org/packages/l/linux-headers/linux-headers-{{ kernel_version.stdout }}-{{ ansible_architecture }}.pkg.tar.zst"
+linux_headers_signature_url: "{{ linux_headers_url }}.sig"
+
+linux_headers_file: '/tmp/linux-headers.pkg.tar.zst'
+linux_headers_signature_file: '/tmp/linux-headers.pkg.tar.zst.sig'

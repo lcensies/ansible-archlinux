@@ -1,11 +1,13 @@
 ---
-- name: Install signal-desktop and discord
+- name: Install telegram
   pacman:
-    name:
-      - signal-desktop
-      - discord
+    name: telegram-desktop
     state: present
-  register: task_result
-  until: task_result is success
-  retries: 10
-  delay: 2
+  when: messengers.install_telegram | bool
+
+- name: Install Slack
+  kewlfft.aur.aur:
+    name: slack-desktop
+    state: present
+  become_user: aur_builder
+  when: messengers.install_slack | bool

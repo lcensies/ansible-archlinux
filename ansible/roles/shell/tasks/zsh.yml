@@ -1,12 +1,15 @@
 ---
+# Verified: 20.10.2023
 - name: Install oh-my-zsh-git and optional dependencies from AUR
-  aur: name={{ item }} user={{ user.name }}
+  kewlfft.aur.aur:
+    name={{ item }} 
   with_items:
     - oh-my-zsh-git
     - oh-my-zsh-powerline-theme-git
+  become_user: aur_builder
   register: omzinstall
   until: omzinstall is success
-  retries: 10
+  retries: 5
   delay: 2
 
 - name: Install ZSH with completion and syntax
@@ -20,7 +23,7 @@
     state: present
   register: zshinstall
   until: zshinstall is success
-  retries: 10
+  retries: 5
   delay: 2
   notify: change shell
 

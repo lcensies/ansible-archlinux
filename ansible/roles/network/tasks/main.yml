@@ -1,5 +1,10 @@
 ---
 
+- name: Setup DNS server for systemd-resolved
+  shell: |
+    sed -i "s/#DNS=/DNS=1.1.1.1/" /etc/systemd/resolved.conf
+    systemctl restart systemd-resolved
+
 - name: Install network tools
   ansible.builtin.package:
     name:
@@ -17,14 +22,15 @@
   until: task_result is success
   retries: 10
   delay: 2
-  notify:
-    - rkhunter propupdate
+  # TODO remove
+  # notify:
+  #   - rkhunter propupdate
 
 - name: Enable dhcp service
-  ansible.builtin.service: name=dhcpcd state=started enabled=true
+  service: name=dhcpcd state=started enabled=true
 
 - name: Enable NetworkManager service
-  ansible.builtin.service:
+  service:
     name: NetworkManager
     state: started
     enabled: true

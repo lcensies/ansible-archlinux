@@ -6,5 +6,6 @@
   name: base
 - ansible.builtin.import_tasks: ntp.yml
   name: ntp
+  when: system.use_ntp == true
 - ansible.builtin.import_tasks: locale.yml
   name: locale

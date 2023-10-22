@@ -25,3 +25,9 @@
     dest: "/home/{{ user.name }}/.config/pulse/daemon.conf"
   become_user: "{{ user.name }}"
   become: true
+
+- name: Add user to the audio group
+  user:
+    name: "{{ user.name }}"
+    group: audio
+    append: true

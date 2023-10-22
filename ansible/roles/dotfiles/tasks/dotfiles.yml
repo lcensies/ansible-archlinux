@@ -1,17 +1,20 @@
 ---
 
 - name: Install rcm
-  aur: name=rcm user={{ user.name }}
+  kewlfft.aur.aur:
+    name: rcm
+  become: true
+  become_user: aur_builder
   register: task_result
   until: task_result is success
-  retries: 10
+  retries: 3
   delay: 2
   when: dotfiles.installation == "true"
   tags:
     - aur
 
 - name: Clone user dotfiles
-  ansible.builtin.git:
+  git:
     repo: "{{ dotfiles.url }}"
     dest: /home/{{ user.name }}/{{ dotfiles.destination }}
     accept_hostkey: true
@@ -22,7 +25,7 @@
   become_user: "{{ user.name }}"
 
 - name: Install user dotfiles
-  ansible.builtin.command: "rcup -d /home/{{ user.name }}/{{ dotfiles.destination }} {{ dotfiles.rcup_flags }}"
+  command: "rcup -d /home/{{ user.name }}/{{ dotfiles.destination }} {{ dotfiles.rcup_flags }}"
   when: dotfiles.installation == "true"
   become: true
   become_user: "{{ user.name }}"

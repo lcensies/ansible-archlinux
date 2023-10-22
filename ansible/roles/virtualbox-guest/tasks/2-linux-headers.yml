@@ -1,0 +1,31 @@
+- name: Get kernel version
+  shell: 'uname -r | sed -z "s/-/./"'
+  register: kernel_version
+
+
+# - name: Download signature from archive
+#   get_url:
+#     url: "{{ linux_headers_signature_url }}"
+#     dest: "{{ linux_headers_signature_file }}"
+
+- name: Download headers from archive
+  # TODO: fix the get_url or verify signature with other method
+  # get_url:
+  #   url: "{{ linux_headers_url }}"
+  #   dest: "{{ linux_headers_file }}"
+  #   decompress: false
+  #   checksum: "{{ lookup('file', linux_headers_signature_file) }}"
+  #   force: true
+  shell: "wget -O {{ linux_headers_file }} {{ linux_headers_url }}"
+
+
+- name: Install linux headers
+  shell: "yes Y | pacman -U {{ linux_headers_file }}"
+
+- name: Clean up downloaded files
+  file:
+    path: "{{ item }}"
+    state: absent
+  with_items:
+    - "{{ linux_headers_file }}"
+    - "{{ linux_headers_signature_file }}"

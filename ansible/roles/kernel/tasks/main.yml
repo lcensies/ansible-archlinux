@@ -1,5 +1,6 @@
 ---
 
+# See https://wiki.archlinux.org/title/Security#Kernel_hardening
 - name: Install linux-hardened and hardened headers
   pacman:
     name:

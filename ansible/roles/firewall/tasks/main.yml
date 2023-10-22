@@ -1,17 +1,36 @@
 ---
 
 - name: Apply ipv4 iptables config
-  ansible.builtin.template: src=iptables.rules.j2 dest=/etc/iptables/iptables.rules
-  notify:
-    - restart iptables
-
-- name: Enable and start iptables
-  ansible.builtin.service: name=iptables.service enabled=true state=started
+  ansible.builtin.template: 
+    src: iptables.rules.j2
+    dest: /etc/iptables/iptables.rules
 
 - name: Apply ipv6 iptables config
-  ansible.builtin.template: src=ip6tables.rules.j2 dest=/etc/iptables/ip6tables.rules
-  notify:
-    - restart ip6tables
+  ansible.builtin.template:
+    src: ip6tables.rules.j2
+    dest: /etc/iptables/ip6tables.rules
+ 
 
-- name: Enable and start ip6tables
-  ansible.builtin.service: name=ip6tables.service enabled=true state=started
+
+- name: Start and enable iptables service
+  systemd:
+    name: iptables
+    state: started
+    enabled: yes
+    masked: no
+    daemon_reload: yes
+  register: result
+  delegate_to: "{{item}}"
+  run_once: true
+  with_items: "{{ ansible_play_hosts }}"
+
+- name: need to pause here, otherwise the iptables service starting can sometimes cause ssh to fail
+  pause: seconds=10
+  when: result.changed
+
+
+#- name: Enable and start iptables
+  #ansible.builtin.service: name=iptables.service enabled=true state=started
+
+#- name: Enable and start ip6tables
+#  ansible.builtin.service: name=ip6tables.service enabled=true state=started
