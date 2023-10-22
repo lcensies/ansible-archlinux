@@ -1,0 +1,7 @@
+---
+# Also installs ninja, llvm, cmake, gcc
+- name: "Install clang"
+  pacman: 
+    name: clang
+    state: present
+  

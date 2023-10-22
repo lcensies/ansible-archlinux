@@ -1,0 +1,4 @@
+
+- include_tasks: clion.yml
+
+- include_tasks: cmake.yml

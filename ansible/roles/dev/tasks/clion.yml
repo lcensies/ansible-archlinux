@@ -1,0 +1,13 @@
+---
+
+- name: Install JRE
+  pacman:
+    name: jre-openjdk
+    state: present
+
+# Verified: 20.10.2023
+- name: Install Clion
+  kewlfft.aur.aur:
+    name: clion
+    state: present
+  become_user: aur_builder
