@@ -2,3 +2,7 @@
 - include_tasks: clion.yml
 
 - include_tasks: cmake.yml
+
+- name: Set up vcpkg
+  include_tasks: vcpkg.yml
+  when: dev.install_vcpkg | bool

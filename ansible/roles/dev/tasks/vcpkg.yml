@@ -1,0 +1,15 @@
+---
+
+# Verified: 23.10.2023
+- name: Install vcpkg
+  kewlfft.aur.aur:
+    name: vcpkg
+    state: present
+  become_user: aur_builder
+
+- name: Add user to the vcpkg group
+  user: 
+    name: "{{ user.name }}"
+    groups: 
+      - vcpkg
+    append: true
